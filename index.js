@@ -83,7 +83,13 @@ app.put("/api/persons/:id", (request, response) => {
     });
   }
 
-  persons = persons.map((p) => (p.id !== id) ? p : body);
+  const newPerson = {
+    id: id || Math.floor(Math.random() * 100000),
+    name: body.name,
+    number: body.number
+  };
+
+  persons = persons.map((p) => (p.id !== id) ? p : newPerson);
   response.json(body);
 });
 
@@ -102,8 +108,7 @@ app.post("/api/persons", (request, response) => {
   const newPerson = {
     id: body.id || Math.floor(Math.random() * 100000),
     name: body.name,
-    number: body.number,
-    date: new Date(),
+    number: body.number
   };
 
   if (persons.find((p) => p.name === newPerson.name)) {
