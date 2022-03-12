@@ -1,14 +1,13 @@
 const express = require("express");
-const cors = require('cors')
+const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
-app.use(cors())
-app.use(morgan('tiny'))
+app.use(cors());
+app.use(morgan("tiny"));
 
-// const { post } = require("./routes/post-route.js")
-// const api = require('./routes/api');
+app.use(express.static("build"));
 
 let persons = [
   {
@@ -70,26 +69,26 @@ app.delete("/api/persons/:id", (request, response) => {
 app.put("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   const selectedPerson = persons.find((p) => p.id === id);
-  if(!selectedPerson) {
+  if (!selectedPerson) {
     return response.status(404).json({
-      error: `Contact with id ${id} not in Phonebook`
+      error: `Contact with id ${id} not in Phonebook`,
     });
   }
 
   const body = request.body;
-  if(!body.number) {
+  if (!body.number) {
     return response.status(400).json({
-      error: `No new number provided`
+      error: `No new number provided`,
     });
   }
 
   const newPerson = {
     id: id || Math.floor(Math.random() * 100000),
     name: body.name,
-    number: body.number
+    number: body.number,
   };
 
-  persons = persons.map((p) => (p.id !== id) ? p : newPerson);
+  persons = persons.map((p) => (p.id !== id ? p : newPerson));
   response.json(body);
 });
 
@@ -108,7 +107,7 @@ app.post("/api/persons", (request, response) => {
   const newPerson = {
     id: body.id || Math.floor(Math.random() * 100000),
     name: body.name,
-    number: body.number
+    number: body.number,
   };
 
   if (persons.find((p) => p.name === newPerson.name)) {
